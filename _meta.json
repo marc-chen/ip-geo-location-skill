@@ -1,0 +1,11 @@
+{
+  "owner": "marc-chen",
+  "slug": "ip-geo-location",
+  "displayName": "IP Geo Location",
+  "latest": {
+    "version": "0.1.0",
+    "publishedAt": 1741601362444,
+    "commit": "https://github.com/marc-chen/ip-geo-location-skill"
+  },
+  "history": []
+}
