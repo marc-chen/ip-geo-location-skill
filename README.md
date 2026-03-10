@@ -44,3 +44,7 @@ Typical prompts:
 The skill supports IPv4, IPv6, batch lookup, and domain-to-IP workflow.
 
 It also handles MCP session lifecycle: initialize before calling, and re-initialize once when session ID is expired/invalid.
+
+## License
+
+MIT. See `LICENSE`.
