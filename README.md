@@ -16,6 +16,8 @@ A production-ready MCP skill for IP geolocation lookup.
 - This skill sends queried IP addresses to an external MCP endpoint.
 - Current default endpoint is `https://ip.api4claw.com/mcp` (encrypted in transit).
 - Script implementation is pinned to this HTTPS endpoint and does not allow arbitrary endpoint override.
+- Private/internal IP ranges are blocked and will not be forwarded to the external endpoint.
+- Script timeout is fixed at 15s (no runtime env override).
 
 ### Install
 
@@ -45,6 +47,8 @@ Try prompts like:
 - 查询的 IP 会发送到外部 MCP 服务。
 - 当前默认端点为 `https://ip.api4claw.com/mcp`（传输加密）。
 - 脚本实现固定使用该 HTTPS 端点，不允许任意地址覆盖。
+- 私有/内网 IP 段会被拦截，不会转发到外部服务。
+- 脚本超时固定为 15 秒（不使用运行时环境变量覆盖）。
 
 ### 安装 | Install
 

@@ -84,12 +84,14 @@ Detailed tool schema and protocol notes: [API reference](./references/api.md)
 - Support both IPv4 and IPv6.
 - If input is neither valid IP nor resolvable domain, return a clear validation error.
 - For script-based calls, only valid IP literals are sent to remote MCP (invalid inputs are rejected locally).
+- Private/reserved IP ranges (for example `127.0.0.1`, `10.x.x.x`, `192.168.x.x`, `fc00::/7`) must not be sent to external MCP.
 
 ## Security and Privacy
 
 - This skill sends queried IP addresses to an external MCP service (`ip.api4claw.com`).
 - The default endpoint uses HTTPS transport to encrypt traffic in transit.
 - The script implementation is restricted to a fixed HTTPS endpoint (`https://ip.api4claw.com/mcp`) to reduce misuse risk.
+- Private/internal IPs are blocked in the script implementation to reduce privacy leakage risk.
 
 ## Output Format
 
@@ -105,6 +107,7 @@ If a field is empty, display `-`.
 
 - MCP unavailable/timeout: explain temporary service issue and suggest retry.
 - Invalid IP format: ask user to confirm/correct the IP.
+- Private or reserved IP: explain that local/private addresses are intentionally blocked from external lookup.
 - Empty/unknown location fields: keep response transparent and do not fabricate values.
 - Encoding anomalies (for example garbled country text): include `country_code` and raw value.
 - Session timeout/invalid session ID: re-run MCP `initialize` to get a new `Mcp-Session-Id`, then retry the failed tool call once.
