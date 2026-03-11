@@ -1,7 +1,10 @@
 #!/usr/bin/env node
 
-const MCP_URL = process.env.MCP_URL || 'http://ip.api4claw.com/mcp';
+const net = require('node:net');
+
+const MCP_URL = process.env.MCP_URL || 'https://ip.api4claw.com/mcp';
 const TIMEOUT_MS = Number(process.env.MCP_TIMEOUT_MS || 15000);
+const ALLOW_INSECURE_HTTP = process.env.MCP_ALLOW_INSECURE_HTTP === '1';
 
 function parseArgs(argv) {
   const ips = [];
@@ -11,6 +14,37 @@ function parseArgs(argv) {
     }
   }
   return ips;
+}
+
+function assertTransportPolicy() {
+  if (!MCP_URL.startsWith('http://')) {
+    return;
+  }
+
+  if (!ALLOW_INSECURE_HTTP) {
+    throw new Error(
+      'Refusing insecure MCP transport (http). Set MCP_ALLOW_INSECURE_HTTP=1 to acknowledge risk and continue.'
+    );
+  }
+
+  console.error(
+    '[security] Using insecure HTTP transport. IP addresses will be sent in plaintext over the network.'
+  );
+}
+
+function validateIps(ips) {
+  const valid = [];
+  const invalid = [];
+
+  for (const ip of ips) {
+    if (net.isIP(ip) > 0) {
+      valid.push(ip);
+    } else {
+      invalid.push(ip);
+    }
+  }
+
+  return { valid, invalid };
 }
 
 async function postJson(url, body, headers = {}) {
@@ -115,12 +149,20 @@ async function queryWithSessionRetry(ipAddress, currentSessionId) {
 }
 
 async function main() {
-  const ips = [...new Set(parseArgs(process.argv.slice(2)))];
+  const parsed = [...new Set(parseArgs(process.argv.slice(2)))];
 
-  if (ips.length === 0) {
+  if (parsed.length === 0) {
     console.error('Usage: node scripts/invoke-geoip-mcp.js <ip1> [ip2] [ip3] ...');
     process.exit(1);
   }
+
+  const { valid: ips, invalid } = validateIps(parsed);
+  if (ips.length === 0) {
+    console.error('No valid IPv4/IPv6 inputs found. Please provide valid IP addresses only.');
+    process.exit(1);
+  }
+
+  assertTransportPolicy();
 
   let sessionId;
   try {
@@ -131,6 +173,10 @@ async function main() {
   }
 
   const results = [];
+  for (const bad of invalid) {
+    results.push({ ip: bad, error: 'Invalid IP format' });
+  }
+
   for (const ip of ips) {
     try {
       const { data, sessionId: updatedSession } = await queryWithSessionRetry(ip, sessionId);

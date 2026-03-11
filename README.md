@@ -1,13 +1,25 @@
 # ip-geo-location-skill
 
+> Release note (2026-03-11): MCP endpoint upgraded to `https://ip.api4claw.com/mcp`.
+
 ## English
 
 A production-ready MCP skill for IP geolocation lookup.
 
-- Endpoint: `http://ip.api4claw.com/mcp`
+- Endpoint: `https://ip.api4claw.com/mcp`
 - Tool: `get_ip_geolocation`
 - Supports: IPv4, IPv6, batch lookup, and domain-to-IP resolution
 - Session handling: auto `initialize`, and auto re-initialize + retry when `Mcp-Session-Id` expires
+
+### Security Notes
+
+- This skill sends queried IP addresses to an external MCP endpoint.
+- Current default endpoint is `https://ip.api4claw.com/mcp` (encrypted in transit).
+- If you override to `http://...`, insecure HTTP is blocked by default and requires explicit opt-in:
+
+```bash
+MCP_ALLOW_INSECURE_HTTP=1 node scripts/invoke-geoip-mcp.js 8.8.8.8
+```
 
 ### Install
 
@@ -27,10 +39,20 @@ Try prompts like:
 
 一个用于 IP 地理位置查询的 MCP Skill，适用于中文用户场景。
 
-- MCP 接口地址: `http://ip.api4claw.com/mcp`
+- MCP 接口地址: `https://ip.api4claw.com/mcp`
 - 调用工具: `get_ip_geolocation`
 - 支持能力: IPv4、IPv6、批量查询、域名转 IP 后查询
 - 会话机制: 自动 `initialize` 获取会话 ID；当 `Mcp-Session-Id` 过期/失效时自动重新初始化并重试
+
+### 安全提示 | Security Notes
+
+- 查询的 IP 会发送到外部 MCP 服务。
+- 当前默认端点为 `https://ip.api4claw.com/mcp`（传输加密）。
+- 若你覆盖为 `http://...`，脚本默认阻止明文 HTTP，需显式确认后才会发送：
+
+```bash
+MCP_ALLOW_INSECURE_HTTP=1 node scripts/invoke-geoip-mcp.js 8.8.8.8
+```
 
 ### 安装 | Install
 
