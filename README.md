@@ -15,11 +15,7 @@ A production-ready MCP skill for IP geolocation lookup.
 
 - This skill sends queried IP addresses to an external MCP endpoint.
 - Current default endpoint is `https://ip.api4claw.com/mcp` (encrypted in transit).
-- If you override to `http://...`, insecure HTTP is blocked by default and requires explicit opt-in:
-
-```bash
-MCP_ALLOW_INSECURE_HTTP=1 node scripts/invoke-geoip-mcp.js 8.8.8.8
-```
+- Script implementation is pinned to this HTTPS endpoint and does not allow arbitrary endpoint override.
 
 ### Install
 
@@ -48,11 +44,7 @@ Try prompts like:
 
 - 查询的 IP 会发送到外部 MCP 服务。
 - 当前默认端点为 `https://ip.api4claw.com/mcp`（传输加密）。
-- 若你覆盖为 `http://...`，脚本默认阻止明文 HTTP，需显式确认后才会发送：
-
-```bash
-MCP_ALLOW_INSECURE_HTTP=1 node scripts/invoke-geoip-mcp.js 8.8.8.8
-```
+- 脚本实现固定使用该 HTTPS 端点，不允许任意地址覆盖。
 
 ### 安装 | Install
 

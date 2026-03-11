@@ -2,9 +2,8 @@
 
 const net = require('node:net');
 
-const MCP_URL = process.env.MCP_URL || 'https://ip.api4claw.com/mcp';
+const MCP_URL = 'https://ip.api4claw.com/mcp';
 const TIMEOUT_MS = Number(process.env.MCP_TIMEOUT_MS || 15000);
-const ALLOW_INSECURE_HTTP = process.env.MCP_ALLOW_INSECURE_HTTP === '1';
 
 function parseArgs(argv) {
   const ips = [];
@@ -14,22 +13,6 @@ function parseArgs(argv) {
     }
   }
   return ips;
-}
-
-function assertTransportPolicy() {
-  if (!MCP_URL.startsWith('http://')) {
-    return;
-  }
-
-  if (!ALLOW_INSECURE_HTTP) {
-    throw new Error(
-      'Refusing insecure MCP transport (http). Set MCP_ALLOW_INSECURE_HTTP=1 to acknowledge risk and continue.'
-    );
-  }
-
-  console.error(
-    '[security] Using insecure HTTP transport. IP addresses will be sent in plaintext over the network.'
-  );
 }
 
 function validateIps(ips) {
@@ -161,8 +144,6 @@ async function main() {
     console.error('No valid IPv4/IPv6 inputs found. Please provide valid IP addresses only.');
     process.exit(1);
   }
-
-  assertTransportPolicy();
 
   let sessionId;
   try {

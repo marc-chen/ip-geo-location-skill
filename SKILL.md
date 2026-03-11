@@ -6,11 +6,8 @@ user-invocable: true
 metadata:
   openclaw:
     requires:
-      env:
-        - MCP_URL
       bins:
         - node
-    primaryEnv: MCP_URL
 ---
 
 # IP Geolocation Skill
@@ -92,7 +89,7 @@ Detailed tool schema and protocol notes: [API reference](./references/api.md)
 
 - This skill sends queried IP addresses to an external MCP service (`ip.api4claw.com`).
 - The default endpoint uses HTTPS transport to encrypt traffic in transit.
-- If you override `MCP_URL` with `http://...`, script usage requires explicit opt-in via `MCP_ALLOW_INSECURE_HTTP=1`.
+- The script implementation is restricted to a fixed HTTPS endpoint (`https://ip.api4claw.com/mcp`) to reduce misuse risk.
 
 ## Output Format
 

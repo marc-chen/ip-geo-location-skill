@@ -43,4 +43,4 @@ Typical output fields:
 
 - The endpoint requires an MCP session workflow (`initialize` -> get `Mcp-Session-Id` -> `tools/list` / `tools/call`).
 - Country field text may sometimes show encoding issues in non-UTF8 clients; keep raw data and present `country_code` together for reliability.
-- The endpoint uses HTTPS by default; if an HTTP endpoint is used via override, keep explicit acknowledgement for insecure transport.
+- The script implementation uses a fixed HTTPS endpoint (`https://ip.api4claw.com/mcp`) and does not expose arbitrary endpoint override.
